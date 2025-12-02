@@ -1,0 +1,13 @@
+/.quarto/
+# virtual env
+.venv/
+
+# built site & aux files
+_site/
+index_files/
+
+# large raw data
+data/al_perf.csv
+
+# private keys
+*.pem

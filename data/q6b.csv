@@ -1,0 +1,234 @@
+airport_name,airport_code,most_frequent_reason,num_cancelled
+"Dallas/Fort Worth, TX",DFW,B,420
+"Orlando, FL",MCO,B,100
+"New York, NY",LGA,B,94
+"Newark, NJ",EWR,B,80
+"Boston, MA",BOS,B,70
+"Charlotte, NC",CLT,B,67
+"Tampa, FL",TPA,B,64
+"Denver, CO",DEN,B,55
+"Washington, DC",DCA,B,54
+"Chicago, IL",ORD,B,53
+"Miami, FL",MIA,B,50
+"Fort Lauderdale, FL",FLL,B,46
+"Dallas, TX",DAL,B,45
+"New York, NY",JFK,C,45
+"Honolulu, HI",HNL,A,44
+"San Francisco, CA",SFO,B,42
+"Atlanta, GA",ATL,B,38
+"Detroit, MI",DTW,B,36
+"Aspen, CO",ASE,B,32
+"Philadelphia, PA",PHL,B,31
+"Phoenix, AZ",PHX,A,27
+"Fort Myers, FL",RSW,B,26
+"Las Vegas, NV",LAS,A,26
+"Los Angeles, CA",LAX,A,26
+"Baltimore, MD",BWI,B,25
+"New Orleans, LA",MSY,B,25
+"Austin, TX",AUS,B,21
+"San Diego, CA",SAN,A,19
+"Kahului, HI",OGG,A,18
+"Nashville, TN",BNA,B,18
+"Seattle, WA",SEA,A,18
+"St. Louis, MO",STL,B,18
+"White Plains, NY",HPN,B,18
+"Houston, TX",IAH,A,17
+"Indianapolis, IN",IND,B,17
+"San Juan, PR",SJU,A,17
+"Raleigh/Durham, NC",RDU,B,15
+"Cleveland, OH",CLE,A,14
+"Kansas City, MO",MCI,B,14
+"Lihue, HI",LIH,A,14
+"Minneapolis, MN",MSP,B,14
+"San Antonio, TX",SAT,B,14
+"West Palm Beach/Palm Beach, FL",PBI,B,14
+"Oklahoma City, OK",OKC,B,13
+"Pittsburgh, PA",PIT,B,13
+"Portland, ME",PWM,B,13
+"Oakland, CA",OAK,A,12
+"Santa Barbara, CA",SBA,B,12
+"Sarasota/Bradenton, FL",SRQ,B,12
+"Tulsa, OK",TUL,B,12
+"Cincinnati, OH",CVG,B,11
+"Kona, HI",KOA,A,11
+"Pensacola, FL",PNS,B,11
+"Anchorage, AK",ANC,B,10
+"Houston, TX",HOU,B,10
+"Norfolk, VA",ORF,B,10
+"Palm Springs, CA",PSP,B,10
+"Portland, OR",PDX,A,10
+"San Jose, CA",SJC,A,10
+"Jacksonville, FL",JAX,B,9
+"Little Rock, AR",LIT,B,9
+"Sanford, FL",SFB,C,9
+"Santa Ana, CA",SNA,B,9
+"Shreveport, LA",SHV,B,9
+"Louisville, KY",SDF,B,8
+"Memphis, TN",MEM,B,8
+"Milwaukee, WI",MKE,B,8
+"Ontario, CA",ONT,B,8
+"Salt Lake City, UT",SLC,A,8
+"Washington, DC",IAD,C,8
+"Albuquerque, NM",ABQ,B,7
+"Burbank, CA",BUR,A,7
+"Charleston, SC",CHS,B,7
+"Chicago, IL",MDW,A,7
+"Columbus, OH",CMH,B,7
+"Green Bay, WI",GRB,B,7
+"Madison, WI",MSN,B,7
+"Richmond, VA",RIC,B,7
+"Tucson, AZ",TUS,B,7
+"Wichita, KS",ICT,B,7
+"Des Moines, IA",DSM,B,6
+"El Paso, TX",ELP,B,6
+"Juneau, AK",JNU,A,6
+"Key West, FL",EYW,B,6
+"Lawton/Fort Sill, OK",LAW,B,6
+"Myrtle Beach, SC",MYR,B,6
+"Sacramento, CA",SMF,A,6
+"Appleton, WI",ATW,B,5
+"Birmingham, AL",BHM,B,5
+"Buffalo, NY",BUF,C,5
+"Burlington, VT",BTV,B,5
+"Colorado Springs, CO",COS,B,5
+"Corpus Christi, TX",CRP,C,5
+"Fayetteville, AR",XNA,B,5
+"Greensboro/High Point, NC",GSO,B,5
+"Islip, NY",ISP,B,5
+"Killeen, TX",GRK,B,5
+"Knoxville, TN",TYS,B,5
+"Lake Charles, LA",LCH,B,5
+"Lexington, KY",LEX,B,5
+"Manchester, NH",MHT,B,5
+"Midland/Odessa, TX",MAF,A,5
+"Omaha, NE",OMA,B,5
+"San Luis Obispo, CA",SBP,B,5
+"Savannah, GA",SAV,B,5
+"Spokane, WA",GEG,A,5
+"Springfield, MO",SGF,C,5
+"Amarillo, TX",AMA,C,4
+"Baton Rouge, LA",BTR,B,4
+"Charlotte Amalie, VI",STT,A,4
+"Chattanooga, TN",CHA,C,4
+"Fairbanks, AK",FAI,A,4
+"Fresno, CA",FAT,B,4
+"Greer, SC",GSP,B,4
+"Hartford, CT",BDL,B,4
+"Huntsville, AL",HSV,B,4
+"Jackson/Vicksburg, MS",JAN,B,4
+"Kotzebue, AK",OTZ,B,4
+"Laredo, TX",LRD,C,4
+"Montgomery, AL",MGM,B,4
+"Panama City, FL",ECP,B,4
+"Rochester, NY",ROC,C,4
+"St. Petersburg, FL",PIE,C,4
+"Worcester, MA",ORH,B,4
+"Alexandria, LA",AEX,B,3
+"Asheville, NC",AVL,B,3
+"Dayton, OH",DAY,B,3
+"Fort Smith, AR",FSM,B,3
+"Grand Junction, CO",GJT,B,3
+"Gulfport/Biloxi, MS",GPT,B,3
+"Hancock/Houghton, MI",CMX,B,3
+"Harlingen/San Benito, TX",HRL,C,3
+"Long Beach, CA",LGB,B,3
+"Lubbock, TX",LBB,C,3
+"Mission/McAllen/Edinburg, TX",MFE,B,3
+"Providence, RI",PVD,A,3
+"Santa Fe, NM",SAF,B,3
+"South Bend, IN",SBN,B,3
+"Syracuse, NY",SYR,A,3
+"Tallahassee, FL",TLH,B,3
+"Tyler, TX",TYR,B,3
+"Valparaiso, FL",VPS,B,3
+"Waco, TX",ACT,B,3
+"Yakutat, AK",YAK,A,3
+"Abilene, TX",ABI,C,2
+"Bangor, ME",BGR,B,2
+"Beaumont/Port Arthur, TX",BPT,B,2
+"Bellingham, WA",BLI,A,2
+"Bend/Redmond, OR",RDM,A,2
+"Bloomington/Normal, IL",BMI,C,2
+"Bozeman, MT",BZN,B,2
+"Brownsville, TX",BRO,C,2
+"Cedar Rapids/Iowa City, IA",CID,B,2
+"Charlottesville, VA",CHO,B,2
+"College Station/Bryan, TX",CLL,C,2
+"Columbia, SC",CAE,B,2
+"Concord, NC",USA,C,2
+"Daytona Beach, FL",DAB,B,2
+"Durango, CO",DRO,B,2
+"Evansville, IN",EVV,C,2
+"Fort Wayne, IN",FWA,B,2
+"Gainesville, FL",GNV,B,2
+"Grand Island, NE",GRI,B,2
+"Grand Rapids, MI",GRR,B,2
+"Ketchikan, AK",KTN,A,2
+"Lafayette, LA",LFT,B,2
+"Laramie, WY",LAR,B,2
+"Marquette, MI",MQT,B,2
+"Mobile, AL",MOB,C,2
+"Monroe, LA",MLU,B,2
+"Nome, AK",OME,B,2
+"Reno, NV",RNO,A,2
+"San Angelo, TX",SJT,C,2
+"Scottsbluff, NE",BFF,B,2
+"Sioux Falls, SD",FSD,B,2
+"Wilmington, NC",ILM,C,2
+"Adak Island, AK",ADK,B,1
+"Aguadilla, PR",BQN,C,1
+"Akron, OH",CAK,A,1
+"Albany, NY",ALB,B,1
+"Allentown/Bethlehem/Easton, PA",ABE,C,1
+"Alpena, MI",APN,B,1
+"Atlantic City, NJ",ACY,B,1
+"Augusta, GA",AGS,C,1
+"Bakersfield, CA",BFL,B,1
+"Bethel, AK",BET,B,1
+"Billings, MT",BIL,A,1
+"Bismarck/Mandan, ND",BIS,B,1
+"Bristol/Johnson City/Kingsport, TN",TRI,C,1
+"Champaign/Urbana, IL",CMI,C,1
+"Cheyenne, WY",CYS,B,1
+"Christiansted, VI",STX,B,1
+"Columbia, MO",COU,C,1
+"Columbus, OH",LCK,C,1
+"Cordova, AK",CDV,B,1
+"Deadhorse, AK",SCC,A,1
+"Eagle, CO",EGE,C,1
+"Escanaba, MI",ESC,A,1
+"Fargo, ND",FAR,A,1
+"Flagstaff, AZ",FLG,B,1
+"Flint, MI",FNT,C,1
+"Garden City, KS",GCK,C,1
+"Gillette, WY",GCC,B,1
+"Hagerstown, MD",HGR,A,1
+"Harrisburg, PA",MDT,C,1
+"Hays, KS",HYS,B,1
+"Hilo, HI",ITO,A,1
+"Hilton Head, SC",HHH,B,1
+"Jackson, WY",JAC,B,1
+"Kalispell, MT",FCA,A,1
+"Kodiak, AK",ADQ,A,1
+"Lansing, MI",LAN,B,1
+"Manhattan/Ft. Riley, KS",MHK,C,1
+"Mason City, IA",MCW,A,1
+"Medford, OR",MFR,A,1
+"Melbourne, FL",MLB,B,1
+"Moline, IL",MLI,C,1
+"Monterey, CA",MRY,B,1
+"Montrose/Delta, CO",MTJ,C,1
+"Peoria, IL",PIA,C,1
+"Plattsburgh, NY",PBG,C,1
+"Ponce, PR",PSE,B,1
+"Portsmouth, NH",PSM,C,1
+"Roanoke, VA",ROA,C,1
+"Roswell, NM",ROW,C,1
+"Salina, KS",SLN,B,1
+"Sitka, AK",SIT,A,1
+"Stillwater, OK",SWO,C,1
+"Texarkana, AR",TXK,C,1
+"Trenton, NJ",TTN,A,1
+"Wichita Falls, TX",SPS,B,1
+"Wrangell, AK",WRG,A,1
+"Yuma, AZ",YUM,B,1

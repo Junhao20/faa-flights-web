@@ -1,0 +1,17 @@
+Reporting_Airline,airport_name,avg_dep_delay
+9E,"Portland, ME",92.826
+AA,"Jackson, WY",89.139
+AS,"Adak Island, AK",35.75
+B6,"San Jose, CA",81.433
+DL,"Fairbanks, AK",37.233
+F9,"Sarasota/Bradenton, FL",64.152
+G4,"Albany, NY",88.929
+HA,"Austin, TX",36
+MQ,"Fort Myers, FL",36.2
+NK,"St. Louis, MO",35.533
+OH,"Austin, TX",83.667
+OO,"Bishop, CA",65.6
+Reporting_Airline,OriginCityName,0
+UA,"Bend/Redmond, OR",37.311
+WN,"San Francisco, CA",30.453
+YX,"Dallas/Fort Worth, TX",85.25

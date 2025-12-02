@@ -1,0 +1,6 @@
+---
+title: "About the author"
+---
+
+Hi everyone, my name is Hermann Junhao Fan, I am currently a second year graduate student at the Georgetown University, majoring in Data Science and Analytics.
+

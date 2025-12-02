@@ -1,0 +1,184 @@
+---
+title: "Why Your Flight Was Late: A Deep Dive Into U.S. Airline Delays"
+jupyter: sql_final_web
+format:
+  html:
+    code-fold: true
+---
+
+
+
+```{python}
+import pandas as pd
+import matplotlib.pyplot as plt
+plt.rcParams.update({
+    "figure.figsize": (7, 4),
+    "font.size": 11,
+    "axes.labelsize": 12,
+    "axes.titlesize": 13,
+    "xtick.labelsize": 10,
+    "ytick.labelsize": 10,
+    "legend.fontsize": 10,
+    "axes.grid": True,
+    "grid.linestyle": "--",
+    "grid.alpha": 0.4,
+    "figure.dpi": 120, # download friendly
+})
+```
+
+```{python}
+import pandas as pd
+import matplotlib.pyplot as plt
+q1 = pd.read_csv("data/q1_maxdelay_air.csv")
+q1 = q1[q1["Reporting_Airline"] != "Reporting_Airline"].copy()
+q1["max_delay"] = q1["max_delay"].astype(int)
+
+q1 = q1.sort_values("max_delay", ascending=True)
+
+fig, ax = plt.subplots()
+ax.barh(q1["Reporting_Airline"], q1["max_delay"])
+ax.set_xlabel("Maximum departure delay (minutes)")
+ax.set_ylabel("Airline")
+ax.set_title("Maximum observed departure delay by airline")
+
+for i, (delay) in enumerate(q1["max_delay"]):
+    ax.text(delay + 15, i, f"{delay}", va="center", fontsize=9)
+
+plt.tight_layout()
+plt.show()
+```
+
+
+2. Extremes of late vs early departures by airline (q1 + q2)
+```{python}
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# --- load data (as before) ---
+q1 = pd.read_csv("data/q1_maxdelay_air.csv")
+q2 = pd.read_csv("data/q2_max_early_departure_minutes.csv")
+
+# clean q1 (drop header row accidentally saved as data, if needed)
+q1 = q1[q1["Reporting_Airline"] != "Reporting_Airline"].copy()
+q1["max_delay"] = q1["max_delay"].astype(int)
+
+# clean q2
+q2 = q2[q2["Reporting_Airline"] != "Reporting_Airline"].copy()
+q2.rename(columns={"max_early_departure_minutes": "max_early"}, inplace=True)
+q2["max_early"] = q2["max_early"].astype(int)
+
+# merge
+merged = pd.merge(q1, q2, on="Reporting_Airline", how="inner")
+
+# sort by largest late delay
+merged = merged.sort_values("max_delay", ascending=True)
+
+airlines   = merged["Reporting_Airline"]
+max_delay  = merged["max_delay"]
+max_early  = merged["max_early"]
+
+# for diverging bars: early is negative (left), late is positive (right)
+early_neg = -max_early
+
+max_val = max(max_delay.max(), max_early.max())
+xlim = max_val * 1.1
+
+plt.rcParams.update({
+    "figure.figsize": (7, 5),
+    "font.size": 11,
+    "axes.grid": True,
+    "grid.linestyle": "--",
+    "grid.alpha": 0.3,
+    "figure.dpi": 120,
+})
+
+fig, ax = plt.subplots()
+
+# bars: early (left, blue) and late (right, red)
+ax.barh(airlines, early_neg,  color="#1f77b4", label="Maximum early departure")
+ax.barh(airlines, max_delay, color="#d62728", label="Maximum late departure")
+
+# center line at 0
+ax.axvline(0, color="black", linewidth=1)
+
+ax.set_xlim(-xlim, xlim)
+ax.set_xlabel("Extreme departure minutes (early to the left, late to the right)")
+ax.set_ylabel("Airline")
+ax.set_title("Airline extremes: earliest and latest departures")
+
+# custom x tick labels: show absolute minutes instead of +/- sign
+xticks = ax.get_xticks()
+ax.set_xticklabels([f"{abs(int(x))}" for x in xticks])
+
+for y, e, d in zip(airlines, early_neg, max_delay):
+    # early (left)
+    ax.text(e - xlim*0.02, y, f"{abs(e):.0f}", va="center", ha="right", fontsize=8)
+    # late (right)
+    ax.text(d + xlim*0.02, y, f"{d:.0f}", va="center", ha="left", fontsize=8)
+
+ax.legend(loc="lower right", frameon=False)
+
+plt.tight_layout()
+plt.show()
+```
+
+
+
+```{python}
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# read
+q3 = pd.read_csv("data/q3.csv")
+
+# drop rows with missing day_name or with the header accidentally repeated
+q3 = q3[q3["day_name"].notna()].copy()
+q3 = q3[q3["day_name"] != "day_name"].copy()
+
+# make sure numeric columns are numeric
+q3["num_flights"] = pd.to_numeric(q3["num_flights"], errors="coerce")
+q3["day_rank"]   = pd.to_numeric(q3["day_rank"], errors="coerce")
+
+# drop any rows that still have NaNs in key columns
+q3 = q3.dropna(subset=["num_flights", "day_rank"])
+
+# sort by rank (1 = busiest)
+q3_sorted = q3.sort_values("day_rank")
+
+# ----- publication-style bar chart -----
+plt.rcParams.update({
+    "figure.figsize": (7, 4),
+    "font.size": 11,
+    "axes.grid": True,
+    "grid.linestyle": "--",
+    "grid.alpha": 0.3,
+    "figure.dpi": 120,
+})
+
+fig, ax = plt.subplots()
+
+x = range(len(q3_sorted))
+ax.bar(x, q3_sorted["num_flights"], width=0.6)
+
+ax.set_xticks(x)
+ax.set_xticklabels(q3_sorted["day_name"])
+
+ax.set_xlabel("Day of week")
+ax.set_ylabel("Number of flights")
+ax.set_title("Flight volume by day of week")
+
+# annotate rank above each bar
+y_offset = q3_sorted["num_flights"].max() * 0.01
+for i, (_, row) in enumerate(q3_sorted.iterrows()):
+    ax.text(
+        i,
+        row["num_flights"] + y_offset,
+        f"Rank {int(row['day_rank'])}",
+        ha="center",
+        va="bottom",
+        fontsize=9,
+    )
+
+plt.tight_layout()
+plt.show()
+```

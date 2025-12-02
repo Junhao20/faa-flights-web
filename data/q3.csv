@@ -1,0 +1,9 @@
+day_name,num_flights,day_rank
+Monday,101307,1
+Tuesday,93256,2
+Friday,81288,3
+Thursday,81112,4
+Sunday,79810,5
+Wednesday,75852,6
+Saturday,69560,7
+NULL,1,8

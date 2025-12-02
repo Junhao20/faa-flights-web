@@ -1,0 +1,40 @@
+project:
+  type: website
+
+website:
+  title: "FAA"
+  navbar:
+    left:
+      - text: "Overview"
+        href: index.qmd
+      - text: "About the Author"
+        href: about.qmd
+      - text: "Maximal Delays"
+        href: maximal-delays.qmd
+      - text: "Maximal early departure by airline"
+        href: maximal-early-departure.qmd
+      - text: "flight volume by day of week "
+        href: flight-volume-by-day-of-week.qmd
+      - text: "Worst Airports for delays in the United States"
+        href: worst-airports.qmd
+      - text: "Why is your flights being canceled?"
+        href: flight-cancellations.qmd
+      - text: "Moving average of flights over time "
+        href: moving-average-flights.qmd
+      
+
+format:
+  html:
+    theme:
+      light: flatly       # nicer base theme
+      dark: darkly        # optional dark mode
+    css: styles.css       # custom airline/FAA styling
+    toc: true
+
+
+execute:
+  echo: true
+  warning: false
+  message: false
+
+
