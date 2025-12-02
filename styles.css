@@ -1,0 +1,61 @@
+/* css styles */
+/* overall background, soft sky-like color */
+body {
+  background-color: #f4f7fb;
+}
+
+/* navbar: dark blue → lighter blue gradient, like an airline livery */
+.navbar {
+  background: linear-gradient(90deg, #003366, #0b79d0);
+  border-bottom: 3px solid #ffd166;
+}
+
+/* brand + nav links: white text */
+.navbar-brand,
+.navbar-nav .nav-link {
+  color: #f9fbff !important;
+  font-weight: 500;
+}
+
+/* active link: highlight with bottom border + slightly brighter text */
+.navbar-nav .nav-link.active,
+.navbar-nav .nav-link.show {
+  border-bottom: 2px solid #ffd166;
+  color: #ffffff !important;
+}
+
+/* hover state */
+.navbar-nav .nav-link:hover {
+  color: #ffe08a !important;
+}
+
+/* headings: strong airline blue */
+h1, h2, h3, h4 {
+  color: #003366;
+}
+
+/* code blocks: light gray background so they pop less than the plots */
+pre code {
+  background-color: #f0f2f6;
+}
+
+/* plot containers: optional card-like look */
+.figure,
+.quarto-figure {
+  padding: 1rem;
+  margin: 1rem 0;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+/* tables: subtle borders */
+table {
+  background: #ffffff;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+table thead {
+  background-color: #e0ecff;
+}
