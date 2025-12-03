@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>FAA – flight-cancellations</title>
+<title>FAA - Choose wise when you are buying tickets</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -99,7 +133,7 @@ ul.task-list li input[type="checkbox"] {
  <span class="menu-text">Maximal early departure by airline</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./flight-volume-by-day-of-week.qmd" rel="" target="">
+    <a class="nav-link" href="./flight-volume-by-day-of-week.html" rel="" target="">
  <span class="menu-text">flight volume by day of week</span></a>
   </li>  
   <li class="nav-item">
@@ -112,7 +146,7 @@ ul.task-list li input[type="checkbox"] {
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./moving-average-flights.html" rel="" target="">
- <span class="menu-text">Moving average of flights over time</span></a>
+ <span class="menu-text">Time Series Analysis of Flight Delays</span></a>
   </li>  
 </ul>
             <div class="quarto-navbar-tools ms-auto">
@@ -132,8 +166,126 @@ ul.task-list li input[type="checkbox"] {
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Choose wise when you are buying tickets</h1>
+</div>
 
 
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<div class="cell" data-execution_count="1">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>q6b <span class="op">=</span> pd.read_csv(<span class="st">"data/q6b.csv"</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>top_n <span class="op">=</span> <span class="dv">15</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>top_airports <span class="op">=</span> (</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    q6b.sort_values(<span class="st">"num_cancelled"</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>        .head(top_n)[<span class="st">"airport_code"</span>]</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>        .tolist()</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> q6b[q6b[<span class="st">"airport_code"</span>].isin(top_airports)].copy()</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>reason_order <span class="op">=</span> [<span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>, <span class="st">"D"</span>]</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"reason_idx"</span>] <span class="op">=</span> df[<span class="st">"most_frequent_reason"</span>].<span class="bu">map</span>({r: i <span class="cf">for</span> i, r <span class="kw">in</span> <span class="bu">enumerate</span>(reason_order)})</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>airport_order <span class="op">=</span> (</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    df.groupby(<span class="st">"airport_code"</span>)[<span class="st">"num_cancelled"</span>]</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>      .<span class="bu">sum</span>()</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>      .sort_values(ascending<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>      .index</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>      .tolist()</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"airport_idx"</span>] <span class="op">=</span> df[<span class="st">"airport_code"</span>].<span class="bu">map</span>({a: i <span class="cf">for</span> i, a <span class="kw">in</span> <span class="bu">enumerate</span>(airport_order)})</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">7</span>))</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>sizes <span class="op">=</span> df[<span class="st">"num_cancelled"</span>]</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>size_scaled <span class="op">=</span> <span class="dv">50</span> <span class="op">+</span> <span class="dv">450</span> <span class="op">*</span> (sizes <span class="op">-</span> sizes.<span class="bu">min</span>()) <span class="op">/</span> (sizes.<span class="bu">max</span>() <span class="op">-</span> sizes.<span class="bu">min</span>())</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>scatter <span class="op">=</span> ax.scatter(</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>    df[<span class="st">"reason_idx"</span>],</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>    df[<span class="st">"airport_idx"</span>],</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>    s<span class="op">=</span>size_scaled,</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>    c<span class="op">=</span>df[<span class="st">"num_cancelled"</span>],</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>    cmap<span class="op">=</span><span class="st">"viridis"</span>,</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>    alpha<span class="op">=</span><span class="fl">0.85</span>,</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>ax.set_xticks(<span class="bu">range</span>(<span class="bu">len</span>(reason_order)))</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>ax.set_xticklabels([<span class="ss">f"Reason </span><span class="sc">{</span>r<span class="sc">}</span><span class="ss">"</span> <span class="cf">for</span> r <span class="kw">in</span> reason_order])</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>ax.set_yticks(<span class="bu">range</span>(<span class="bu">len</span>(airport_order)))</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>ax.set_yticklabels(airport_order)</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>ax.invert_yaxis()</span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"Most frequent cancellation reason"</span>)</span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"Airport (top 15 by cancellations)"</span>)</span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"Airport Cancellations by Reason (Bubble size = number of cancelled flights)"</span>)</span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>cbar <span class="op">=</span> fig.colorbar(scatter, ax<span class="op">=</span>ax)</span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>cbar.set_label(<span class="st">"Number of cancelled flights"</span>)</span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>ax.grid(axis<span class="op">=</span><span class="st">"x"</span>, linestyle<span class="op">=</span><span class="st">":"</span>, alpha<span class="op">=</span><span class="fl">0.4</span>)</span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>ax.grid(axis<span class="op">=</span><span class="st">"y"</span>, linestyle<span class="op">=</span><span class="st">":"</span>, alpha<span class="op">=</span><span class="fl">0.4</span>)</span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display">
+<p><img src="flight-cancellations_files/figure-html/cell-2-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<table class="table">
+<colgroup>
+<col style="width: 4%">
+<col style="width: 20%">
+<col style="width: 75%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Code</th>
+<th>Reason name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">A</td>
+<td>Carrier</td>
+<td>Airline-controlled issues such as maintenance problems, crew scheduling, or equipment swaps</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">B</td>
+<td>Weather</td>
+<td>Severe weather that makes flying unsafe (storms, snow, low visibility, etc.)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">C</td>
+<td>National Air System</td>
+<td>Air traffic control and airspace issues (congestion, ground delays, flow restrictions)</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">D</td>
+<td>Security</td>
+<td>Security-related events such as breaches, threats, or screening disruptions</td>
+</tr>
+</tbody>
+</table>
+<p>Most cancellation are caused by weaether, so please watch the forecast before you book~</p>
 
 
 

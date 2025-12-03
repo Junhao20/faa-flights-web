@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>FAA - How is the overall on-time departure performance in the US? AND WHY?</title>
+<title>FAA - Which day to fly in April?</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -129,11 +129,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text">Maximal Delays</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="./maximal-early-departure.html" rel="" target="" aria-current="page">
+    <a class="nav-link" href="./maximal-early-departure.html" rel="" target="">
  <span class="menu-text">Maximal early departure by airline</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./flight-volume-by-day-of-week.html" rel="" target="">
+    <a class="nav-link active" href="./flight-volume-by-day-of-week.html" rel="" target="" aria-current="page">
  <span class="menu-text">flight volume by day of week</span></a>
   </li>  
   <li class="nav-item">
@@ -168,7 +168,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">How is the overall on-time departure performance in the US? AND WHY?</h1>
+<h1 class="title">Which day to fly in April?</h1>
 </div>
 
 
@@ -189,61 +189,65 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>q1 <span class="op">=</span> pd.read_csv(<span class="st">"data/q1_maxdelay_air.csv"</span>)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>q2 <span class="op">=</span> pd.read_csv(<span class="st">"data/q2_max_early_departure_minutes.csv"</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># read</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>q3 <span class="op">=</span> pd.read_csv(<span class="st">"data/q3.csv"</span>)</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># clean the data as necessary</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>q1 <span class="op">=</span> q1[q1[<span class="st">"Reporting_Airline"</span>] <span class="op">!=</span> <span class="st">"Reporting_Airline"</span>].copy()</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>q1[<span class="st">"max_delay"</span>] <span class="op">=</span> q1[<span class="st">"max_delay"</span>].astype(<span class="bu">int</span>)</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>q2 <span class="op">=</span> q2[q2[<span class="st">"Reporting_Airline"</span>] <span class="op">!=</span> <span class="st">"Reporting_Airline"</span>].copy()</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>q2.rename(columns<span class="op">=</span>{<span class="st">"max_early_departure_minutes"</span>: <span class="st">"max_early"</span>}, inplace<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>q2[<span class="st">"max_early"</span>] <span class="op">=</span> q2[<span class="st">"max_early"</span>].astype(<span class="bu">int</span>)</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>merged <span class="op">=</span> pd.merge(q1, q2, on<span class="op">=</span><span class="st">"Reporting_Airline"</span>, how<span class="op">=</span><span class="st">"inner"</span>)</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>merged <span class="op">=</span> merged.sort_values(<span class="st">"max_delay"</span>, ascending<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>airlines   <span class="op">=</span> merged[<span class="st">"Reporting_Airline"</span>]</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>max_delay  <span class="op">=</span> merged[<span class="st">"max_delay"</span>]</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>max_early  <span class="op">=</span> merged[<span class="st">"max_early"</span>]</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># drop rows with missing day_name or with the header accidentally repeated</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>q3 <span class="op">=</span> q3[q3[<span class="st">"day_name"</span>].notna()].copy()</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>q3 <span class="op">=</span> q3[q3[<span class="st">"day_name"</span>] <span class="op">!=</span> <span class="st">"day_name"</span>].copy()</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># make sure numeric columns are numeric</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>q3[<span class="st">"num_flights"</span>] <span class="op">=</span> pd.to_numeric(q3[<span class="st">"num_flights"</span>], errors<span class="op">=</span><span class="st">"coerce"</span>)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>q3[<span class="st">"day_rank"</span>]   <span class="op">=</span> pd.to_numeric(q3[<span class="st">"day_rank"</span>], errors<span class="op">=</span><span class="st">"coerce"</span>)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># drop any rows that still have NaNs in key columns</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>q3 <span class="op">=</span> q3.dropna(subset<span class="op">=</span>[<span class="st">"num_flights"</span>, <span class="st">"day_rank"</span>])</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co"># sort by rank (1 = busiest)</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>q3_sorted <span class="op">=</span> q3.sort_values(<span class="st">"day_rank"</span>)</span>
 <span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>early_neg <span class="op">=</span> <span class="op">-</span>max_early</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>max_val <span class="op">=</span> <span class="bu">max</span>(max_delay.<span class="bu">max</span>(), max_early.<span class="bu">max</span>())</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>xlim <span class="op">=</span> max_val <span class="op">*</span> <span class="fl">1.1</span></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>plt.rcParams.update({</span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    <span class="st">"figure.figsize"</span>: (<span class="dv">7</span>, <span class="dv">5</span>),</span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    <span class="st">"font.size"</span>: <span class="dv">11</span>,</span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    <span class="st">"axes.grid"</span>: <span class="va">True</span>,</span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>    <span class="st">"grid.linestyle"</span>: <span class="st">"--"</span>,</span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>    <span class="st">"grid.alpha"</span>: <span class="fl">0.3</span>,</span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>    <span class="st">"figure.dpi"</span>: <span class="dv">120</span>,</span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots()</span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>ax.barh(airlines, early_neg,  color<span class="op">=</span><span class="st">"#1f77b4"</span>, label<span class="op">=</span><span class="st">"Maximum early departure"</span>)</span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>ax.barh(airlines, max_delay, color<span class="op">=</span><span class="st">"#d62728"</span>, label<span class="op">=</span><span class="st">"Maximum late departure"</span>)</span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>ax.axvline(<span class="dv">0</span>, color<span class="op">=</span><span class="st">"black"</span>, linewidth<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>ax.set_xlim(<span class="op">-</span>xlim, xlim)</span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"Extreme departure minutes (early to the left, late to the right)"</span>)</span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"Airline"</span>)</span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"Airline extremes: earliest and latest departures"</span>)</span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>xticks <span class="op">=</span> ax.get_xticks()</span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>ax.set_xticklabels([<span class="ss">f"</span><span class="sc">{</span><span class="bu">abs</span>(<span class="bu">int</span>(x))<span class="sc">}</span><span class="ss">"</span> <span class="cf">for</span> x <span class="kw">in</span> xticks])</span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> y, e, d <span class="kw">in</span> <span class="bu">zip</span>(airlines, early_neg, max_delay):</span>
-<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>    <span class="co"># early (left)</span></span>
-<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>    ax.text(e <span class="op">-</span> xlim<span class="op">*</span><span class="fl">0.02</span>, y, <span class="ss">f"</span><span class="sc">{</span><span class="bu">abs</span>(e)<span class="sc">:.0f}</span><span class="ss">"</span>, va<span class="op">=</span><span class="st">"center"</span>, ha<span class="op">=</span><span class="st">"right"</span>, fontsize<span class="op">=</span><span class="dv">8</span>)</span>
-<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>    <span class="co"># late (right)</span></span>
-<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>    ax.text(d <span class="op">+</span> xlim<span class="op">*</span><span class="fl">0.02</span>, y, <span class="ss">f"</span><span class="sc">{</span>d<span class="sc">:.0f}</span><span class="ss">"</span>, va<span class="op">=</span><span class="st">"center"</span>, ha<span class="op">=</span><span class="st">"left"</span>, fontsize<span class="op">=</span><span class="dv">8</span>)</span>
-<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>ax.legend(loc<span class="op">=</span><span class="st">"lower right"</span>, frameon<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co"># ----- publication-style bar chart -----</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>plt.rcParams.update({</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    <span class="st">"figure.figsize"</span>: (<span class="dv">7</span>, <span class="dv">4</span>),</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    <span class="st">"font.size"</span>: <span class="dv">11</span>,</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    <span class="st">"axes.grid"</span>: <span class="va">True</span>,</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    <span class="st">"grid.linestyle"</span>: <span class="st">"--"</span>,</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    <span class="st">"grid.alpha"</span>: <span class="fl">0.3</span>,</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>    <span class="st">"figure.dpi"</span>: <span class="dv">120</span>,</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots()</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="bu">range</span>(<span class="bu">len</span>(q3_sorted))</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>ax.bar(x, q3_sorted[<span class="st">"num_flights"</span>], width<span class="op">=</span><span class="fl">0.6</span>)</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>ax.set_xticks(x)</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>ax.set_xticklabels(q3_sorted[<span class="st">"day_name"</span>])</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"Day of week"</span>)</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"Number of flights"</span>)</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"Flight volume by day of week"</span>)</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a><span class="co"># annotate rank above each bar</span></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>y_offset <span class="op">=</span> q3_sorted[<span class="st">"num_flights"</span>].<span class="bu">max</span>() <span class="op">*</span> <span class="fl">0.01</span></span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, (_, row) <span class="kw">in</span> <span class="bu">enumerate</span>(q3_sorted.iterrows()):</span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>    ax.text(</span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>        i,</span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>        row[<span class="st">"num_flights"</span>] <span class="op">+</span> y_offset,</span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f"Rank </span><span class="sc">{</span><span class="bu">int</span>(row[<span class="st">'day_rank'</span>])<span class="sc">}</span><span class="ss">"</span>,</span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>        ha<span class="op">=</span><span class="st">"center"</span>,</span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>        va<span class="op">=</span><span class="st">"bottom"</span>,</span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>        fontsize<span class="op">=</span><span class="dv">9</span>,</span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
-<p><img src="maximal-early-departure_files/figure-html/cell-2-output-1.png" class="img-fluid"></p>
+<p><img src="flight-volume-by-day-of-week_files/figure-html/cell-2-output-1.png" class="img-fluid"></p>
 </div>
 </div>
-<p>From the chart above, it is not hard to see that the early departure is far less than the delays. So far, the Alaska airlines has the best record for early departures.</p>
-<p>From this plot it feels like the story is not just about which airline has the single worst delay, but about how extreme and rare these events are. Some carriers show very long late departures, over three thousand minutes, which is more than two days, so that probably comes from very unusual events like major storms, mechanical problems, or schedule changes. A next step could compare these extremes to the typical delay for each airline, using averages or medians, to see whether a big spike is just one bad day or part of a larger pattern. It would also be interesting to check how many flights for each airline leave very early or very late, maybe by counting the share of departures that are more than one hour off the schedule. Another idea is to break the same analysis by airport or by region, to see whether some hubs create these extreme values more often than others. Looking at those extra views would make the chart less about one dramatic number and more about how each airline usually treats passengers.</p>
+<p>This chart indicating that all flights in April and counts how many departed on each day of the week. Monday has the highest volume of flights, followed by Tuesday, so the start of the work week is clearly the busiest time in the air. That matches what we expect from business travel, since many people fly out on Monday or Tuesday for meetings. The quietest day is Saturday, with Wednesday also on the lower side, which suggests that mid- and late-week trips are less common than early-week travel. If the goal is to avoid crowds and have a better chance at less busy airports, Saturday (rank 7) or Wednesday (rank 6) look like the best choices in April. If the goal is to have the most possible flight options, Monday and Tuesday remain the strongest days, even though they come with more traffic.</p>
 
 
 
