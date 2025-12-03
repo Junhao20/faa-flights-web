@@ -1,0 +1,144 @@
+---
+title: "The TREND"
+jupyter: sql_final_web
+format:
+  html:
+    code-fold: true
+---
+
+```{python}
+import pandas as pd
+import matplotlib.pyplot as plt
+
+from statsmodels.tsa.stattools import adfuller
+from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
+from statsmodels.tsa.seasonal import seasonal_decompose
+
+from pmdarima import auto_arima
+df = pd.read_csv("data/q7.csv")
+df["flightdate_parsed"] = pd.to_datetime(df["flightdate"], errors="coerce")
+df = df[df["flightdate_parsed"].notna()].copy()
+
+df = df.sort_values("flightdate_parsed")
+ts = df.set_index("flightdate_parsed")["num_flights"]
+ts = ts.asfreq("D")  # daily frequency (April 1–30)
+
+print("Time series head:")
+print(ts.head())
+print("\nTime series summary:")
+print(ts.describe())
+
+# 2. Plot the raw series
+plt.figure(figsize=(10, 4))
+plt.plot(ts.index, ts.values)
+plt.title("Daily Number of Flights (April)")
+plt.xlabel("Date")
+plt.ylabel("Number of flights")
+plt.tight_layout()
+plt.show()
+```
+
+Take a glance, we can see a strong seasonality here, or a trend, since we only have the data for a month.
+
+### ADF Test 
+```{python}
+adf_stat, p_value, used_lag, n_obs, crit_vals, icbest = adfuller(ts.dropna())
+print("\nAugmented Dickey-Fuller test:")
+print(f"ADF statistic: {adf_stat:.3f}")
+print(f"p-value: {p_value:.3f}")
+print("Critical values:")
+for k, v in crit_vals.items():
+    print(f"  {k}: {v:.3f}")
+```
+
+Since the P-value is too high, the series is non-stationary, thus a differencing is needed. 
+
+### Differencing and Proceed
+
+```{python}
+ts_diff = ts.diff().dropna()
+
+print("\nDifferenced series summary:")
+print(ts_diff.describe())
+
+plt.figure(figsize=(10, 4))
+plt.plot(ts_diff.index, ts_diff.values)
+plt.title("Daily Number of Flights (First Difference)")
+plt.xlabel("Date")
+plt.ylabel("Difference in number of flights")
+plt.tight_layout()
+plt.show()
+
+adf_stat_d, p_value_d, used_lag_d, n_obs_d, crit_vals_d, icbest_d = adfuller(ts_diff)
+print("\nADF on differenced series:")
+print(f"ADF statistic: {adf_stat_d:.3f}")
+print(f"p-value: {p_value_d:.3f}")
+print("Critical values:")
+for k, v in crit_vals_d.items():
+    print(f"  {k}: {v:.3f}")
+```
+
+Seems still non-stationary.
+```{python}
+decomp = seasonal_decompose(ts, model="additive", period=7)
+fig = decomp.plot()
+fig.set_size_inches(10, 8)
+plt.tight_layout()
+plt.show()
+
+stepwise_model = auto_arima(
+    ts_diff,
+    start_p=0,
+    start_q=0,
+    max_p=3,
+    max_q=3,
+    d=0,
+    seasonal=False,
+    trace=True,
+    error_action="ignore",
+    suppress_warnings=True,
+    stepwise=True,
+)
+
+print("\nSelected ARIMA model on differenced series:")
+print(stepwise_model.summary())
+
+n_forecast = 7
+fc_diff, conf_int_diff = stepwise_model.predict(n_periods=n_forecast, return_conf_int=True)
+
+last_level = ts.iloc[-1]
+
+fc_level = last_level + pd.Series(fc_diff).cumsum()
+fc_index = pd.date_range(start=ts.index[-1] + pd.Timedelta(days=1),
+                         periods=n_forecast, freq="D")
+fc_level.index = fc_index
+
+lower_level = last_level + pd.Series(conf_int_diff[:, 0]).cumsum()
+upper_level = last_level + pd.Series(conf_int_diff[:, 1]).cumsum()
+lower_level.index = fc_index
+upper_level.index = fc_index
+
+print("\nForecasted levels for next 7 days:")
+print(fc_level)
+
+plt.figure(figsize=(10, 5))
+plt.plot(ts.index, ts.values, label="Observed")
+plt.plot(fc_level.index, fc_level.values, label="Forecast", marker="o")
+
+plt.fill_between(
+    fc_level.index,
+    lower_level,
+    upper_level,
+    alpha=0.2,
+    label="95% confidence interval",
+)
+
+plt.title("Daily Flights: First-Difference ARIMA Forecast (Back-transformed)")
+plt.xlabel("Date")
+plt.ylabel("Number of flights")
+plt.legend()
+plt.tight_layout()
+plt.show()
+```
+
+The time–series results suggest that daily flight counts in April are very stable overall. The decomposition plot shows only a slight downward trend at the beginning of the month and a gentle recovery later, while the seasonal component has a clear weekly pattern with peaks on busy weekdays and dips on weekends. Because the ADF test on the original series indicated non-stationarity, I first took a one–day difference, which produced a stationary series suitable for ARIMA modeling. Fitting auto-ARIMA to this differenced series and then transforming the forecasts back to the original scale gives predictions for the next week that stay close to the historical level of about 19,000–20,000 flights per day. The forecast line is almost flat, and the widening confidence band mainly reflects increasing uncertainty rather than a strong expected change, so the main takeaway is a strong weekly seasonality around a stable average rather than any major trend up or down.

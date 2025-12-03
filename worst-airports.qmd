@@ -1,0 +1,72 @@
+---
+title: "Any Alternative Airports?"
+jupyter: sql_final_web
+format:
+  html:
+    code-fold: true
+---
+
+```{python}
+import pandas as pd
+from geopy.geocoders import Nominatim
+from geopy.extra.rate_limiter import RateLimiter
+import plotly.express as px
+
+df = pd.read_csv("data/q5.csv")   
+
+geolocator = Nominatim(user_agent="faa_delay_mapper")
+geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1) 
+def get_lat_lon(place: str):
+    try:
+        location = geocode(f"{place}, USA")
+        if location is not None:
+            return pd.Series({"lat": location.latitude, "lon": location.longitude})
+    except Exception as e:
+        print(f"Error geocoding {place}: {e}")
+    return pd.Series({"lat": float("nan"), "lon": float("nan")})
+
+coords = df["airport_name"].apply(get_lat_lon)
+df = pd.concat([df, coords], axis=1)
+df = df.dropna(subset=["lat", "lon"])
+
+fig = px.scatter_geo(
+    df,
+    lat="lat",
+    lon="lon",
+    scope="north america",
+    color="Reporting_Airline",          # airline info
+    size="avg_dep_delay",               # reflect delay size
+    size_max=25,
+    hover_name="airport_name",
+    hover_data={
+        "Reporting_Airline": True,
+        "avg_dep_delay": True,
+        "lat": False,
+        "lon": False,
+    },
+    labels={
+        "Reporting_Airline": "Airline",
+        "avg_dep_delay": "Avg departure delay (min)",
+    },
+    title="Average Departure Delay by Airline and Airport (April)",
+)
+
+fig.update_traces(marker_line_width=0.5)
+fig.update_layout(legend_title_text="Airline")
+
+fig.show()
+```
+
+### If you are travelling to CA and TX
+From this map, we can see lots of delays concentrated in California and Texas. Based on my experience, this is mainly caused by the amount of international flights, where California serves as the major transfer between North America and Asia, and Texas serves as the connection between United States and other Middle and South America countries. Consequently, if you are flying domestically to those states, and have a connection flight, please allow at least one hour for transferring. Trust me, since I missed my flight to Hong Kong at SFO lolll.
+
+
+### Other regions
+
+On the map over **Texas and the central U.S.**, the circles mark big domestic hubs. These airports also show noticeable delays across several airlines, but they are usually smaller than the largest West Coast hubs. Most traffic there is **domestic**, so flights are shorter and have more chances to recover from delays compared with ultra long-haul routes.
+
+Along the **East Coast**, especially in the Northeast and Florida, clusters of circles indicate another form of congestion. These airports serve dense business and leisure markets, with many short flights sharing limited airspace. Multiple airlines operate from the same airports, which again shows that delays are a **shared challenge** whenever demand is high and the local airspace is crowded.
+
+### Overall takeaway
+
+The geographic pattern suggests that **where** an airline operates can matter as much as **which** airline it is. Large hubs in California show high delays because they connect North America and Asia and must absorb huge international demand, while other major hubs in the center and on the East Coast show delays driven by domestic connection pressure and busy airspace.

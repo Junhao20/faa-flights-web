@@ -19,7 +19,7 @@ website:
         href: worst-airports.qmd
       - text: "Why is your flights being canceled?"
         href: flight-cancellations.qmd
-      - text: "Moving average of flights over time "
+      - text: "Time Series Analysis of Flight Delays"
         href: moving-average-flights.qmd
       
 

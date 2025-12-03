@@ -6,8 +6,11 @@ format:
     code-fold: true
 ---
 
+# Choose your airlines before travel
 
+Choosing airlines is crutial for your travel. Some airlines simply have more delays due to its poor service. For example, if an airline does not purchase for the gate for boarding, the delay is more likely to occur. 
 
+Consequently, in this visualization, we are going to tell you, during the April 2024, which airline has the most delay overall.
 ```{python}
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -48,137 +51,35 @@ plt.tight_layout()
 plt.show()
 ```
 
+| Code | Airline (full name)        | Country | Example high-traffic / flagship route*        |
+|:----:|----------------------------|:-------:|-----------------------------------------------|
+| AA   | American Airlines          | USA     | Dallas/Fort Worth (DFW) – Los Angeles (LAX)   |
+| B6   | JetBlue Airways            | USA     | Miami (MIA) – New York–JFK (JFK)              |
+| OH   | PSA Airlines               | USA     | Cleveland (CLE) – Washington Reagan (DCA)**   |
+| MQ   | Envoy Air                  | USA     | Regional feeder routes for American (AAdvantage hubs such as DFW, ORD, MIA) |
+| OO   | SkyWest Airlines           | USA     | Regional feeder network linking small cities to hubs (e.g., DEN, SLC, ORD, LAX) |
+| G4   | Allegiant Air              | USA     | Allentown (ABE) – Orlando (MCO)               |
+| YX   | Republic Airways           | USA     | Regional feeder for American / Delta / United (Midwest & East Coast hubs) |
+| F9   | Frontier Airlines          | USA     | Denver (DEN) – Las Vegas (LAS)                |
+| UA   | United Airlines            | USA     | Newark (EWR) – Orlando (MCO)                  |
+| DL   | Delta Air Lines            | USA     | Atlanta (ATL) – Orlando (MCO)                 |
+| HA   | Hawaiian Airlines          | USA     | Honolulu (HNL) – Kahului, Maui (OGG)          |
+| 9E   | Endeavor Air               | USA     | Delta Connection feeder network (ATL, DTW, MSP, JFK, LGA, RDU hubs
 
-2. Extremes of late vs early departures by airline (q1 + q2)
-```{python}
-import pandas as pd
-import matplotlib.pyplot as plt
+From the chart and table above, we are able to see that the American Airline, Jetblue Airways, and PSA Airlines has the worst performance in terms of on-time departure. (Additional information, PSA airlines is also an American Airlines firm, which serves as a regional express.) 
 
-# --- load data (as before) ---
-q1 = pd.read_csv("data/q1_maxdelay_air.csv")
-q2 = pd.read_csv("data/q2_max_early_departure_minutes.csv")
+Compare with American Airlines and PSA Airlines, the JetBlue's performance is more understandable, since they are offering the ticket with less price. However, if you are looking for both price and on-time rate, I would not recommend you to choose American Airlines. 
 
-# clean q1 (drop header row accidentally saved as data, if needed)
-q1 = q1[q1["Reporting_Airline"] != "Reporting_Airline"].copy()
-q1["max_delay"] = q1["max_delay"].astype(int)
+### Which airlines would I choose?
 
-# clean q2
-q2 = q2[q2["Reporting_Airline"] != "Reporting_Airline"].copy()
-q2.rename(columns={"max_early_departure_minutes": "max_early"}, inplace=True)
-q2["max_early"] = q2["max_early"].astype(int)
+Based on this set of airlines, there are a few that I would personally feel
+most comfortable choosing as a traveler:
 
-# merge
-merged = pd.merge(q1, q2, on="Reporting_Airline", how="inner")
+- **Delta Air Lines (DL)** – One of the largest U.S. network carriers, with a
+  dense hub in Atlanta (ATL) and strong coverage across the U.S. and
+  internationally. Delta is often seen as a reliable “default” choice for many
+  domestic and international routes.
 
-# sort by largest late delay
-merged = merged.sort_values("max_delay", ascending=True)
+- **United Airlines (UA)** - One of the largest arlines in the US as well. The major difference between UA and DL is that UA is more affordable compared with the delta airlines. For the travellers who is under 23 years old, they are eligible for a discounted travel. Moreover, its international flights, for example, New York to London, Washington to Hong Kong, are the most affordable compare with other airlines, and without too much transfer. 
 
-airlines   = merged["Reporting_Airline"]
-max_delay  = merged["max_delay"]
-max_early  = merged["max_early"]
-
-# for diverging bars: early is negative (left), late is positive (right)
-early_neg = -max_early
-
-max_val = max(max_delay.max(), max_early.max())
-xlim = max_val * 1.1
-
-plt.rcParams.update({
-    "figure.figsize": (7, 5),
-    "font.size": 11,
-    "axes.grid": True,
-    "grid.linestyle": "--",
-    "grid.alpha": 0.3,
-    "figure.dpi": 120,
-})
-
-fig, ax = plt.subplots()
-
-# bars: early (left, blue) and late (right, red)
-ax.barh(airlines, early_neg,  color="#1f77b4", label="Maximum early departure")
-ax.barh(airlines, max_delay, color="#d62728", label="Maximum late departure")
-
-# center line at 0
-ax.axvline(0, color="black", linewidth=1)
-
-ax.set_xlim(-xlim, xlim)
-ax.set_xlabel("Extreme departure minutes (early to the left, late to the right)")
-ax.set_ylabel("Airline")
-ax.set_title("Airline extremes: earliest and latest departures")
-
-# custom x tick labels: show absolute minutes instead of +/- sign
-xticks = ax.get_xticks()
-ax.set_xticklabels([f"{abs(int(x))}" for x in xticks])
-
-for y, e, d in zip(airlines, early_neg, max_delay):
-    # early (left)
-    ax.text(e - xlim*0.02, y, f"{abs(e):.0f}", va="center", ha="right", fontsize=8)
-    # late (right)
-    ax.text(d + xlim*0.02, y, f"{d:.0f}", va="center", ha="left", fontsize=8)
-
-ax.legend(loc="lower right", frameon=False)
-
-plt.tight_layout()
-plt.show()
-```
-
-
-
-```{python}
-import pandas as pd
-import matplotlib.pyplot as plt
-
-# read
-q3 = pd.read_csv("data/q3.csv")
-
-# drop rows with missing day_name or with the header accidentally repeated
-q3 = q3[q3["day_name"].notna()].copy()
-q3 = q3[q3["day_name"] != "day_name"].copy()
-
-# make sure numeric columns are numeric
-q3["num_flights"] = pd.to_numeric(q3["num_flights"], errors="coerce")
-q3["day_rank"]   = pd.to_numeric(q3["day_rank"], errors="coerce")
-
-# drop any rows that still have NaNs in key columns
-q3 = q3.dropna(subset=["num_flights", "day_rank"])
-
-# sort by rank (1 = busiest)
-q3_sorted = q3.sort_values("day_rank")
-
-# ----- publication-style bar chart -----
-plt.rcParams.update({
-    "figure.figsize": (7, 4),
-    "font.size": 11,
-    "axes.grid": True,
-    "grid.linestyle": "--",
-    "grid.alpha": 0.3,
-    "figure.dpi": 120,
-})
-
-fig, ax = plt.subplots()
-
-x = range(len(q3_sorted))
-ax.bar(x, q3_sorted["num_flights"], width=0.6)
-
-ax.set_xticks(x)
-ax.set_xticklabels(q3_sorted["day_name"])
-
-ax.set_xlabel("Day of week")
-ax.set_ylabel("Number of flights")
-ax.set_title("Flight volume by day of week")
-
-# annotate rank above each bar
-y_offset = q3_sorted["num_flights"].max() * 0.01
-for i, (_, row) in enumerate(q3_sorted.iterrows()):
-    ax.text(
-        i,
-        row["num_flights"] + y_offset,
-        f"Rank {int(row['day_rank'])}",
-        ha="center",
-        va="bottom",
-        fontsize=9,
-    )
-
-plt.tight_layout()
-plt.show()
-```
+Of course, delay performance depends on many factors (weather, congestion, airport, time of day), so this list is not a strict ranking. It is simply a short narrative about a few airlines from the table that a typical traveler might be inclined to choose, given their networks and general reputation.

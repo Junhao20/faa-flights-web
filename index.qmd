@@ -1,63 +1,57 @@
 ---
-title: "Why Your Flight Was Late: A Deep Dive Into U.S. Airline Delays"
+title: "Why Your Flight Was Late? A comprehensive guide to prevent delays for your flights!"
 jupyter: sql_final_web
 format:
   html:
     code-fold: true
 ---
+# Delays! Delays! Delays!
 
-```{python}
-import sys, packaging, pandas as pd
-print("python exe:", sys.executable)
-print("packaging:", packaging.__version__)
-print("pandas:", pd.__version__)
-```
+![](pics/delay.png)
 
-Since we are trying to build a publication-level visualization, we are going to use this code as our plotting style
-```{python}
-import pandas as pd
-import matplotlib.pyplot as plt
-plt.rcParams.update({
-    "figure.figsize": (7, 4),
-    "font.size": 11,
-    "axes.labelsize": 12,
-    "axes.titlesize": 13,
-    "xtick.labelsize": 10,
-    "ytick.labelsize": 10,
-    "legend.fontsize": 10,
-    "axes.grid": True,
-    "grid.linestyle": "--",
-    "grid.alpha": 0.4,
-    "figure.dpi": 120, # download friendly
-})
-```
+Delays is always been a painful thing to experience for all of the travellers in the world. Recently, increasing numbers of delays in airlines in the US impact millions of people's travel plan. Of course, including mine...
 
-```{python}
-import pandas as pd
-import matplotlib.pyplot as plt
-q1 = pd.read_csv("data/q1_maxdelay_air.csv")
-q1 = q1[q1["Reporting_Airline"] != "Reporting_Airline"].copy()
-q1["max_delay"] = q1["max_delay"].astype(int)
+So what actually causing the delays?
 
-q1 = q1.sort_values("max_delay", ascending=True)
+- **Weather**  
+  Thunderstorms, snow, low visibility, and strong winds can slow down takeoffs and landings or close runways completely. Even if the weather is fine at your airport, bad conditions at a previous stop can still delay your flight.
 
-fig, ax = plt.subplots()
-ax.barh(q1["Reporting_Airline"], q1["max_delay"])
-ax.set_xlabel("Maximum departure delay (minutes)")
-ax.set_ylabel("Airline")
-ax.set_title("Maximum observed departure delay by airline")
+- **Air traffic congestion**  
+  Busy hubs like ATL, ORD, or JFK handle thousands of flights per day. When the airspace or runways are crowded, air traffic control may hold departures or arrivals to keep the system safe, which creates a chain of delays.
 
-for i, (delay) in enumerate(q1["max_delay"]):
-    ax.text(delay + 15, i, f"{delay}", va="center", fontsize=9)
+- **Late arriving aircraft**  
+  Many flights reuse the same plane throughout the day. If an earlier leg arrives late, the next departure often cannot leave on time, even if everything else is ready.
 
-plt.tight_layout()
-plt.show()
-```
+- **Airline operations and scheduling**  
+  Turnaround times that are too tight, crew scheduling conflicts, or last-minute aircraft swaps can push flights behind schedule.
 
+- **Crew availability and duty limits**  
+  Pilots and flight attendants must follow strict duty-time rules. If a crew times out because of earlier delays, the airline has to find a replacement crew before the flight can depart.
 
+- **Maintenance and safety checks**  
+  Mechanical issues, unexpected inspections, or minor repairs can keep an aircraft at the gate longer than planned. These delays are frustrating, but they are usually done for safety reasons.
 
+- **Security and airport processes**  
+  Security incidents, long lines at checkpoints, or problems with baggage handling and boarding can also add extra minutes to departure times.
 
+Together, these factors create a complex system where a single disruption can ripple through many flights and airports.
 
+--------------------------------------------------------------------------------------------------------------------------
 
+## What this website shows
 
+In this project, I use FAA flight data to explore flight delays from several angles:
 
+- **Maximal delays** – Which flights experienced the longest delays, and when did they occur?  
+- **Maximal early departures** – Are there flights that regularly leave much earlier than scheduled?  
+- **Moving-average flights** – How does flight activity change over time when we smooth out daily noise?  
+- **Flight cancellations** – Where and when are cancellations most common?  
+- **Worst airports** – Which airports tend to have the worst delay or cancellation performance?
+
+Each page of this site focuses on one of these questions and uses tables and visualizations to turn raw FAA data into interpretable insights about how the U.S. air travel system behaves.
+
+-------
+
+# Data Source:
+![](pics/faa.png)
+ http://www.transtats.bts.gov/ 

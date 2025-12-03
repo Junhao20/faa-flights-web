@@ -2,5 +2,53 @@
 title: "About the author"
 ---
 
-Hi everyone, my name is Hermann Junhao Fan, I am currently a second year graduate student at the Georgetown University, majoring in Data Science and Analytics.
+::: {.columns}
+::: {.column width="30%"}
+![](pics/photo.png){fig-alt="Photo of Hermann Junhao Fan" width=90%}
+:::
 
+::: {.column width="70%"}
+
+Hi everyone, my name is Hermann Junhao Fan. I am currently a second-year
+graduate student at Georgetown University, majoring in Data Science and
+Analytics.
+
+### Academic Experience
+
+- **Georgetown University (M.S.)**, Data Science and Analytics 
+  Coursework in time series, machine learning, data visualization, and
+  large-scale data processing.
+
+- **Tsinghua University, School of Electronic Engineering (Pre-Doc)**, visiting research scholar.
+  
+- **George Washington University, School of Business (B.S.)**, coursework and researches in Machine learning and its application in business. 
+
+### Working Experience
+
+- **Algorithm Engineer**, PERSE-AI, Hong Kong, China
+  
+  Mainly working on the LLM application in Law. Developing an mature and deployable model to help the laywer on filing the F-1 for IPO.
+
+- **Data Analyst Intern**, Oracle, Hong Kong, China 
+  Research scientist
+
+- **Data Analyst Intern**, Agricultural Bank of China, New York, USA  
+  Built fuzzy string matching pipelines and compliance-oriented models.
+
+### Publications:
+
+- SARNet: A Spike-Aware consecutive validation Framework for Accurate Remaining Useful Life Prediction (Submitted to IEEE ICASSP 2026), First author.
+
+### Google Scholar:
+
+https://scholar.google.com/citations?user=ILITshIAAAAJ&hl=en
+
+### Contact:
+- Phone: 646-9457552
+- Email: jf1687@georgetown.edu
+- Address: 922 24th Street, APT 615, Washington, DC, 20037
+
+Feel free to reach out if you’d like to chat about data science and my research, statistics, or machine learning!
+
+:::
+:::

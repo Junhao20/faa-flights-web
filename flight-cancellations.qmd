@@ -1,0 +1,77 @@
+---
+title: "Choose wise when you are buying tickets"
+jupyter: sql_final_web
+format:
+  html:
+    code-fold: true
+---
+
+```{python}
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+q6b = pd.read_csv("data/q6b.csv")
+
+top_n = 15
+top_airports = (
+    q6b.sort_values("num_cancelled", ascending=False)
+        .head(top_n)["airport_code"]
+        .tolist()
+)
+df = q6b[q6b["airport_code"].isin(top_airports)].copy()
+
+reason_order = ["A", "B", "C", "D"]
+df["reason_idx"] = df["most_frequent_reason"].map({r: i for i, r in enumerate(reason_order)})
+
+airport_order = (
+    df.groupby("airport_code")["num_cancelled"]
+      .sum()
+      .sort_values(ascending=False)
+      .index
+      .tolist()
+)
+df["airport_idx"] = df["airport_code"].map({a: i for i, a in enumerate(airport_order)})
+
+fig, ax = plt.subplots(figsize=(10, 7))
+
+sizes = df["num_cancelled"]
+size_scaled = 50 + 450 * (sizes - sizes.min()) / (sizes.max() - sizes.min())
+
+scatter = ax.scatter(
+    df["reason_idx"],
+    df["airport_idx"],
+    s=size_scaled,
+    c=df["num_cancelled"],
+    cmap="viridis",
+    alpha=0.85,
+)
+
+ax.set_xticks(range(len(reason_order)))
+ax.set_xticklabels([f"Reason {r}" for r in reason_order])
+ax.set_yticks(range(len(airport_order)))
+ax.set_yticklabels(airport_order)
+ax.invert_yaxis()
+
+ax.set_xlabel("Most frequent cancellation reason")
+ax.set_ylabel("Airport (top 15 by cancellations)")
+ax.set_title("Airport Cancellations by Reason (Bubble size = number of cancelled flights)")
+
+cbar = fig.colorbar(scatter, ax=ax)
+cbar.set_label("Number of cancelled flights")
+
+ax.grid(axis="x", linestyle=":", alpha=0.4)
+ax.grid(axis="y", linestyle=":", alpha=0.4)
+
+plt.tight_layout()
+plt.show()
+```
+
+| Code | Reason name             | Description                                                                                 |
+|:----:|-------------------------|---------------------------------------------------------------------------------------------|
+| A    | Carrier                 | Airline-controlled issues such as maintenance problems, crew scheduling, or equipment swaps |
+| B    | Weather                 | Severe weather that makes flying unsafe (storms, snow, low visibility, etc.)               |
+| C    | National Air System     | Air traffic control and airspace issues (congestion, ground delays, flow restrictions)     |
+| D    | Security                | Security-related events such as breaches, threats, or screening disruptions                |
+
+Most cancellation are caused by weaether, so please watch the forecast before you book~

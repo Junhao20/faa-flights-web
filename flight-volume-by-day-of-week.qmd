@@ -1,0 +1,68 @@
+---
+title: "Which day to fly in April?"
+jupyter: sql_final_web
+format:
+  html:
+    code-fold: true
+---
+
+```{python}
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# read
+q3 = pd.read_csv("data/q3.csv")
+
+# drop rows with missing day_name or with the header accidentally repeated
+q3 = q3[q3["day_name"].notna()].copy()
+q3 = q3[q3["day_name"] != "day_name"].copy()
+
+# make sure numeric columns are numeric
+q3["num_flights"] = pd.to_numeric(q3["num_flights"], errors="coerce")
+q3["day_rank"]   = pd.to_numeric(q3["day_rank"], errors="coerce")
+
+# drop any rows that still have NaNs in key columns
+q3 = q3.dropna(subset=["num_flights", "day_rank"])
+
+# sort by rank (1 = busiest)
+q3_sorted = q3.sort_values("day_rank")
+
+# ----- publication-style bar chart -----
+plt.rcParams.update({
+    "figure.figsize": (7, 4),
+    "font.size": 11,
+    "axes.grid": True,
+    "grid.linestyle": "--",
+    "grid.alpha": 0.3,
+    "figure.dpi": 120,
+})
+
+fig, ax = plt.subplots()
+
+x = range(len(q3_sorted))
+ax.bar(x, q3_sorted["num_flights"], width=0.6)
+
+ax.set_xticks(x)
+ax.set_xticklabels(q3_sorted["day_name"])
+
+ax.set_xlabel("Day of week")
+ax.set_ylabel("Number of flights")
+ax.set_title("Flight volume by day of week")
+
+# annotate rank above each bar
+y_offset = q3_sorted["num_flights"].max() * 0.01
+for i, (_, row) in enumerate(q3_sorted.iterrows()):
+    ax.text(
+        i,
+        row["num_flights"] + y_offset,
+        f"Rank {int(row['day_rank'])}",
+        ha="center",
+        va="bottom",
+        fontsize=9,
+    )
+
+plt.tight_layout()
+plt.show()
+```
+
+This chart indicating that all flights in April and counts how many departed on each day of the week. Monday has the highest volume of flights, followed by Tuesday, so the start of the work week is clearly the busiest time in the air. That matches what we expect from business travel, since many people fly out on Monday or Tuesday for meetings. The quietest day is Saturday, with Wednesday also on the lower side, which suggests that mid- and late-week trips are less common than early-week travel. If the goal is to avoid crowds and have a better chance at less busy airports, Saturday (rank 7) or Wednesday (rank 6) look like the best choices in April. If the goal is to have the most possible flight options, Monday and Tuesday remain the strongest days, even though they come with more traffic.
