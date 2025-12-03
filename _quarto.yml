@@ -1,8 +1,9 @@
 project:
   type: website
+  output-dir: docs
 
 website:
-  title: "FAA"
+  title: "Flight Delays (FAA Data)"
   navbar:
     left:
       - text: "Overview"
@@ -11,30 +12,26 @@ website:
         href: about.qmd
       - text: "Maximal Delays"
         href: maximal-delays.qmd
-      - text: "Maximal early departure by airline"
+      - text: "Early Departures by Airline"
         href: maximal-early-departure.qmd
-      - text: "flight volume by day of week "
+      - text: "Daily Flight Volume"
         href: flight-volume-by-day-of-week.qmd
-      - text: "Worst Airports for delays in the United States"
+      - text: "Worst Airports for Delays"
         href: worst-airports.qmd
-      - text: "Why is your flights being canceled?"
+      - text: "Why Is Your Flight Canceled?"
         href: flight-cancellations.qmd
-      - text: "Time Series Analysis of Flight Delays"
+      - text: "Moving Average Over Time"
         href: moving-average-flights.qmd
-      
 
 format:
   html:
     theme:
-      light: flatly       # nicer base theme
-      dark: darkly        # optional dark mode
-    css: styles.css       # custom airline/FAA styling
+      light: flatly
+      dark: darkly
+    css: styles.css
     toc: true
-
 
 execute:
   echo: true
   warning: false
   message: false
-
-
